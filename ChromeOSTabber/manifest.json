@@ -1,0 +1,23 @@
+{
+    "manifest_version": 2,
+    "name": "ChromeOSTabber",
+    "version": "1.0",
+    "permissions": ["tabs"],
+    "background": {
+        "scripts": ["ChromeOSTabber.js"]
+    },
+    "commands": {
+        "tabForward": {
+            "suggested_key": {
+                "default": "Alt+Shift+["
+            },
+            "description": "Tab forward"
+        },
+        "tabBackward": {
+            "suggested_key": {
+                "default": "Alt+Shift+]"
+            },
+            "description": "Tab backward"
+        }
+    }
+}
