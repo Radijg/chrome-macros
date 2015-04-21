@@ -2,22 +2,21 @@
     "manifest_version": 2,
     "name": "ChromeOSTabber",
     "version": "1.0",
-    "permissions": ["tabs"],
+    "permissions": ["tabs", "http://*/*, https://*/*", "*://*/*", "<all_urls>", "file://*/*"],
     "background": {
-        "scripts": ["ChromeOSTabber.js"]
+        "scripts": ["background.js"]
     },
+    "content_scripts": [{
+        "matches": ["http://*/*", "https://*/*", "*://*/*", "file://*/*"],
+        "js": ["ChromeOSTabber.js"],
+        "run_at": "document_start"
+    }],
     "commands": {
-        "tabForward": {
+        "anyCommandName": {
             "suggested_key": {
-                "default": "Alt+Shift+["
+                "default": "Alt+Shift+S"
             },
-            "description": "Tab forward"
-        },
-        "tabBackward": {
-            "suggested_key": {
-                "default": "Alt+Shift+]"
-            },
-            "description": "Tab backward"
+            "description": "Some description"
         }
     }
 }
