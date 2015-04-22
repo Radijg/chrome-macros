@@ -1,0 +1,20 @@
+{
+    "manifest_version": 2,
+    "name": "Chrome OS Tabbing Utility",
+    "short_name": "Chrome OS Tabbing Utility",
+    "version": "1.1",
+    "permissions": ["tabs", "http://*/*, https://*/*", "*://*/*", "<all_urls>"],
+    "background": {
+        "scripts": ["handleKeydownEvents.js"]
+    },
+    "content_scripts": [{
+        "matches": ["*://*/*", "http://*/*", "https://*/*", "file://*/*"],
+        "js": ["postKeydownEvents.js"],
+        "run_at": "document_start"
+    }],
+    "icons": {
+        "16": "icon16.png",
+        "48": "icon48.png",
+        "128": "icon128.png"
+    }
+}
