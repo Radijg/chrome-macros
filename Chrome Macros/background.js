@@ -12,12 +12,6 @@
         if (e.keyCode === 219 && e.ctrlKey && e.shiftKey) {
             tab(false);
         }
-
-        if (e.keyCode === 67 && e.altKey && e.shiftKey) {
-            chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
-                chrome.tabs.sendMessage(tabs[0].id, {action: "quick-copy"});
-            });
-        }
     } //--------- handle keypress; dispatch commands
 
 
