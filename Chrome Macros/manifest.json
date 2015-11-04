@@ -1,15 +1,15 @@
 {
     "manifest_version": 2,
-    "name": "Chrome OS Tabbing Utility",
-    "short_name": "Chrome OS Tabbing Utility",
+    "name": "Chrome Macros",
+    "short_name": "Chrome Macros",
     "version": "1.1",
     "permissions": ["tabs", "http://*/*, https://*/*", "*://*/*", "<all_urls>"],
     "background": {
-        "scripts": ["handleKeydownEvents.js"]
+        "scripts": ["background.js"]
     },
     "content_scripts": [{
         "matches": ["*://*/*", "http://*/*", "https://*/*", "file://*/*"],
-        "js": ["postKeydownEvents.js"],
+        "js": ["content.js"],
         "run_at": "document_start"
     }],
     "icons": {
