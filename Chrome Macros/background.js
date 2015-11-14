@@ -1,18 +1,15 @@
 (function () {
     var _this = this;
 
-    chrome.runtime.onMessage.addListener(function (message, sender, response) {
-        message.keydownEvent && handleKeydownEvent(message.keydownEvent);
-    }); //--------- attach listener; similar to chrome.runtime.addEventListener("message", function handleMessage (message) { ... });
+    chrome.runtime.onMessage.addListener(function (msg, sender, response) {
 
-    function handleKeydownEvent (e) {
-        if (e.keyCode === 221 && e.ctrlKey === true && e.shiftKey === true) {
-           tab(true);
-        }
-        if (e.keyCode === 219 && e.ctrlKey && e.shiftKey) {
+        if (msg === "tab") {
+            tab(true);
+        } else if (msg = "tab-reverse") {
             tab(false);
         }
-    } //--------- handle keypress; dispatch commands
+
+    });
 
 
     // for tabbing on ChromeOS
