@@ -3,17 +3,16 @@
 
     chrome.runtime.onMessage.addListener(function (msg, sender, response) {
 
-        if (msg === "tab") {
-            tab(true);
-        } else if (msg = "tab-reverse") {
-            tab(false);
+        if (msg === "tabFocusNext") {
+            tabFocus(true);
+        } else if (msg === "tabFocusPrevious") {
+            tabFocus(false);
         }
 
     });
 
-
     // for tabbing on ChromeOS
-    function tab (forward) {
+    function tabFocus (forward) {
         onNextTabDetermined(function (nextTab) {
             chrome.tabs.update(nextTab && nextTab.id, {
                 "active": true,
@@ -50,4 +49,5 @@
             });
         };
     }
+
 })();
