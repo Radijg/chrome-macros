@@ -72,6 +72,7 @@
                 shade.style.height = "100%";
                 shade.style.backgroundColor = "rgba(0,0,0," + shadeLevel + ")";
                 shade.style.zIndex = "2147483647";
+                shade.style.pointerEvents = "none";
                 document.body.appendChild(shade);
             }
         }
