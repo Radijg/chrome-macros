@@ -1,8 +1,9 @@
 (function (window, document) {
 
+    // key trigger functions; ctrl is "control" on mac
     window.addEventListener("keydown", function (e) {
 
-        // tab focus -- previous or next for ChromeOS
+        // chrome os shift tab focus with square brackets
         if (e.ctrlKey && e.shiftKey && !e.altKey) {
             if (e.keyCode === 219) { // square bracket left '['
                 sendRuntimeMessage("tabFocusPrevious");
@@ -13,7 +14,16 @@
             chrome.runtime.sendMessage(message); // see background.js
         }
 
-        // looperman copy -- prompt sanitized sample details
+        // windows os tab history back / forward with control and square brackets
+        if (e.ctrlKey && !e.shiftKey && !e.altKey) {
+            if (e.keyCode === 219) { // square bracket left '['
+                window.history.back();
+            } else if (e.keyCode === 221) { // square bracket right ']'
+                window.history.forward();
+            }
+        }
+
+        // prompt sanitized copyable filename; tailored to looperman
         if (e.ctrlKey && !e.altKey) {
             if (e.keyCode === 67) { // lowercase 'c'
                 copySanitized();
@@ -23,7 +33,7 @@
             if (sel) window.prompt("", sel);
         }
 
-        // basic night shade -- append div with semi transparent background
+        // screen dimmer; append div with semi transparent background
         if (e.ctrlKey && e.shiftKey && !e.altKey) {
             if (e.keyCode === 48) {
                 setShadeLevel(0);
@@ -65,15 +75,75 @@
                 document.body.appendChild(shade);
             }
         }
-
-        // windows os tabs back and forward with control and square brackets
-        if (e.ctrlKey && !e.shiftKey && !e.altKey) {
-            if (e.keyCode === 219) {
-                window["history"]["back"]();
-            } else if (e.keyCode === 221) {
-                window["history"]["forward"]();
-            }
-        }
     });
 
+    // click hypem fav count will console.log precedented users (they fav'd the same songs)
+    if (window.location.hostname === "hypem.com") {
+        if (window.document.readyState === "complete") {
+            attachHypemFavoritersLogger();
+        } else {
+            window.document.addEventListener("readystatechange", function () {
+                if (window.document.readyState === "complete") {
+                    attachHypemFavoritersLogger();
+                }
+            });
+        }
+    } function attachHypemFavoritersLogger () {
+        // var jq = document.createElement("script");
+        // jq.onload = function () {
+            var numMapSharedSongs = numMapSharedSongs || {}; // at username: num of songs in common
+            var shareCounts = shareCounts || {}; // at index N: users who share N songs in common
+
+            $(".toggle-favorites").click(handleToggleFavClick);
+
+            function handleCollectionComplete (arrNames) {
+                for (var i = 0; i < arrNames.length; i++) {
+                    var name = arrNames[i];
+                    numMapSharedSongs[name] = numMapSharedSongs[name] + 1 || 1; // sets {name:1} or more
+                }
+                for (var name in numMapSharedSongs) {
+                    var shareCount = numMapSharedSongs[name];
+                    if (shareCounts[shareCount]) {
+                        shareCounts[shareCount].push(name);
+                    } else {
+                        shareCounts[shareCount] = [name];
+                    }
+                }
+                console.log("shareCounts: ", shareCounts);
+            }
+
+            function handleToggleFavClick (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                var url = "http://hypem.com/inc/serve_activity_info.php?type=favorites&id=_ID_&skip=_SKIP_",
+                    ID = $(this)[0].id.match(/favcount_(\w+)/)[1],
+                    numFavoriters = parseInt($(this)[0].title.match(/\d+/)[0]),
+                    regex = /href=\"\/([^\"]+)\"/g;
+
+                // console.log("url", url, "ID", ID, "numFavoriters", numFavoriters, "regex", regex);
+
+                var favoriters = [];
+
+                for (var currentPage = 0; currentPage * 20 < numFavoriters; currentPage++) {
+                    $.get((url.replace("_ID_", ID)).replace("_SKIP_", currentPage * 20), function (html) {
+                        while (match = regex.exec(html)) {
+                            favoriters.push(match[1]);
+                        }
+                    });
+                }
+                var cycleCount = 0;
+                var cycle = setInterval(function () {
+                    cycleCount += 1;
+                    if (favoriters.length === numFavoriters || cycleCount >= 100) {
+                        handleCollectionComplete(favoriters);
+                        // console.log(favoriters);
+                        favoriters = null;
+                        clearInterval(cycle);
+                    }
+                }, 100);
+            }
+        // };
+        // document.querySelector("head").appendChild(jq); jq.src = "https://code.jquery.com/jquery-2.1.1.min.js";
+    }
 })(window, document);
