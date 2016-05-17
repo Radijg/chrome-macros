@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "Chrome Macros",
     "short_name": "Chrome Macros",
-    "version": "1.12",
+    "version": "1.13",
     "permissions": ["tabs", "http://*/*, https://*/*", "*://*/*", "<all_urls>"],
     "background": {
         "scripts": ["background.js"]
@@ -11,10 +11,5 @@
         "matches": ["*://*/*", "http://*/*", "https://*/*", "file://*/*"],
         "js": ["content.js", "jquery-2.1.1.min.js"],
         "run_at": "document_start"
-    }],
-    "icons": {
-        "16": "icon16.png",
-        "48": "icon48.png",
-        "128": "icon128.png"
-    }
+    }]
 }
